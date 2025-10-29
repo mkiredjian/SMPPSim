@@ -162,18 +162,36 @@ public class SMPPSim
     public static void main(String args[]) throws Exception
     {
         System.out.println("SMPPSim is starting....");
-        if((args == null) || (args.length != 2))
+
+        // Default configuration file paths
+        String logbackConfig = "conf/logback.xml";
+        String propsConfig = "conf/smppsim.props";
+
+        // Check arguments: allow 0 (use defaults) or 2 (custom paths)
+        if(args != null && args.length == 2)
         {
+            // Use provided paths
+            logbackConfig = args[0];
+            propsConfig = args[1];
+        }
+        else if(args != null && args.length != 0)
+        {
+            // Invalid number of arguments
             showUsage();
             return;
         }
+        // If args.length == 0 or args == null, use defaults (no error)
+
+        System.out.println("Using configuration files:");
+        System.out.println("  Logback: " + logbackConfig);
+        System.out.println("  Properties: " + propsConfig);
 
         //Load logback.xml file
-        configure(args[0]);
+        configure(logbackConfig);
 
         Properties props = new Properties();
         // load the given properties : smppsim.props
-        InputStream is = new FileInputStream(args[1]);
+        InputStream is = new FileInputStream(propsConfig);
         props.load(is);
         initialise(props);
 
@@ -232,9 +250,20 @@ public class SMPPSim
 //    }
     private static void showUsage()
     {
-        System.out.println("Invalide or missing arguments");
-        System.out.println("There are 2 arguments:  logback.xml file path and smppsim.props");
-        System.out.println("java -jar smppsim.jar conf/logback.xml conf/smppsim.props");
+        System.out.println("Invalid number of arguments!");
+        System.out.println("");
+        System.out.println("Usage:");
+        System.out.println("  1. Run with default configuration:");
+        System.out.println("     java -jar smppsim.jar");
+        System.out.println("     (Uses conf/logback.xml and conf/smppsim.props)");
+        System.out.println("");
+        System.out.println("  2. Run with custom configuration:");
+        System.out.println("     java -jar smppsim.jar <logback.xml path> <smppsim.props path>");
+        System.out.println("");
+        System.out.println("Examples:");
+        System.out.println("  java -jar smppsim.jar");
+        System.out.println("  java -jar smppsim.jar conf/logback.xml conf/smppsim.props");
+        System.out.println("  java -jar smppsim.jar /etc/smpp/logback.xml /etc/smpp/smppsim.props");
     }
 
     private static void initialise(Properties props) throws Exception

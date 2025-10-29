@@ -12,4 +12,5 @@ if [ ! -z "$OLD_PID" ]; then
 fi
 
 echo "Starting SMPPSim..."
-java -jar target/smppsim.jar conf/logback.xml conf/smppsim.props
+echo "(Using default configuration: conf/logback.xml and conf/smppsim.props)"
+java -jar target/smppsim.jar
