@@ -46,11 +46,13 @@
             <version>1.6.1</version>
         </dependency>
         
-        <!--smpp dependency-->
+        <!--smpp dependency - using system scope to reference local JAR-->
         <dependency>
             <groupId>smpp</groupId>
             <artifactId>smpp-lib</artifactId>
             <version>1.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/smpp-lib-1.3.jar</systemPath>
         </dependency>
         
         <dependency>
