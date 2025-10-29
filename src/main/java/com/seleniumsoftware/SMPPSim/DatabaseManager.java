@@ -81,8 +81,8 @@ public class DatabaseManager {
         try {
             HikariConfig config = new HikariConfig();
 
-            // JDBC URL
-            String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s?useUnicode=true&characterEncoding=utf8mb4&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+            // JDBC URL - Using utf8 instead of utf8mb4 for Java compatibility
+            String jdbcUrl = String.format("jdbc:mysql://%s:%d/%s?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
                     host, port, database);
             config.setJdbcUrl(jdbcUrl);
 
