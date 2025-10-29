@@ -510,6 +510,12 @@ public class StandardProtocolHandler
         {
             m = new MessageState(smppmsg, smppresp.getMessage_id());
             smsc.getOq().addMessageState(m);
+
+            // Save message to database
+            DatabaseManager dbManager = DatabaseManager.getInstance();
+            if (dbManager.isEnabled()) {
+                dbManager.saveReceivedMessage(smppmsg, smppresp.getMessage_id());
+            }
         }
         catch (OutboundQueueFullException e)
         {

@@ -121,6 +121,16 @@ public class SMPPSim
     private static String[] undeliverable_phoneNumbers;
     // USSD
     private static boolean deliver_sm_includes_ussd_service_op = false;
+    // MySQL Database
+    private static boolean mysql_enabled = false;
+    private static String mysql_host;
+    private static int mysql_port;
+    private static String mysql_database;
+    private static String mysql_username;
+    private static String mysql_password;
+    private static int mysql_pool_size;
+    private static int mysql_connection_timeout;
+    private static int mysql_max_lifetime;
     private static int[] messageTypes =
     {
         PduConstants.BIND_RECEIVER, PduConstants.BIND_RECEIVER_RESP, PduConstants.BIND_TRANSMITTER,
@@ -396,6 +406,33 @@ public class SMPPSim
         // USSD
 
         deliver_sm_includes_ussd_service_op = Boolean.valueOf(props.getProperty("DELIVER_SM_INCLUDES_USSD_SERVICE_OP")).booleanValue();
+
+        // MySQL Database Configuration
+        mysql_enabled = Boolean.valueOf(props.getProperty("MYSQL_ENABLED", "false")).booleanValue();
+        if(mysql_enabled)
+        {
+            mysql_host = props.getProperty("MYSQL_HOST", "localhost");
+            mysql_port = getIntProperty(props, "MYSQL_PORT", 3306);
+            mysql_database = props.getProperty("MYSQL_DATABASE", "smppsim_db");
+            mysql_username = props.getProperty("MYSQL_USERNAME", "smppsim");
+            mysql_password = props.getProperty("MYSQL_PASSWORD", "");
+            mysql_pool_size = getIntProperty(props, "MYSQL_POOL_SIZE", 10);
+            mysql_connection_timeout = getIntProperty(props, "MYSQL_CONNECTION_TIMEOUT", 30000);
+            mysql_max_lifetime = getIntProperty(props, "MYSQL_MAX_LIFETIME", 1800000);
+
+            // Initialize DatabaseManager
+            DatabaseManager dbManager = DatabaseManager.getInstance();
+            dbManager.setEnabled(mysql_enabled);
+            dbManager.initialize(mysql_host, mysql_port, mysql_database,
+                               mysql_username, mysql_password,
+                               mysql_pool_size, mysql_connection_timeout,
+                               mysql_max_lifetime);
+            logger.info("MySQL database integration initialized");
+        }
+        else
+        {
+            logger.info("MySQL database integration is disabled");
+        }
 
     }
 

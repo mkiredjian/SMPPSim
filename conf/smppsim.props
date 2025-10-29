@@ -183,3 +183,23 @@ SMSCID=SMPPSim
 
 #Comma-Separated (regex-based) phone numbers to which any SMS sent would be marked as UNDELIVERED.
 UNDELIVERABLE_PHONE_NUMBERS=999999900[1-2]
+
+# MySQL DATABASE CONFIGURATION
+# Enable or disable MySQL database logging of received messages
+MYSQL_ENABLED=false
+# MySQL server hostname or IP address
+MYSQL_HOST=localhost
+# MySQL server port
+MYSQL_PORT=3306
+# Database name
+MYSQL_DATABASE=smppsim_db
+# Database username
+MYSQL_USERNAME=smppsim
+# Database password
+MYSQL_PASSWORD=smppsim_password
+# HikariCP connection pool size (number of connections to maintain)
+MYSQL_POOL_SIZE=10
+# Connection timeout in milliseconds
+MYSQL_CONNECTION_TIMEOUT=30000
+# Maximum lifetime of a connection in the pool (milliseconds)
+MYSQL_MAX_LIFETIME=1800000

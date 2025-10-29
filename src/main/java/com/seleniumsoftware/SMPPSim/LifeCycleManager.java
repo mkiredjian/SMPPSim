@@ -83,6 +83,7 @@ public class LifeCycleManager {
 			if (m.pdu.getDestination_addr().matches(pattern)) {
 				m.setState(PduConstants.UNDELIVERABLE);
 				logger.debug("State set to UNDELIVERABLE due to undeliverable pattern match.");
+				logMessageLifecycle(m, "UNDELIVERABLE");
 				stateSet = true;
 				break;
 			}
@@ -97,15 +98,19 @@ public class LifeCycleManager {
 				if (stateChoice < deliveredThreshold) {
 					m.setState(PduConstants.DELIVERED);
 					logger.debug("State set to DELIVERED");
+					logMessageLifecycle(m, "DELIVERED");
 				} else if (stateChoice < undeliverableThreshold) {
 					m.setState(PduConstants.UNDELIVERABLE);
 					logger.debug("State set to UNDELIVERABLE");
+					logMessageLifecycle(m, "UNDELIVERABLE");
 				} else if (stateChoice < acceptedThreshold) {
 					m.setState(PduConstants.ACCEPTED);
 					logger.debug("State set to ACCEPTED");
+					logMessageLifecycle(m, "ACCEPTED");
 				} else {
 					m.setState(PduConstants.REJECTED);
 					logger.debug("State set to REJECTED");
+					logMessageLifecycle(m, "REJECTED");
 				}			
 			}
 		}
@@ -144,6 +149,26 @@ public class LifeCycleManager {
 				return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Log message lifecycle state change to database
+	 */
+	private void logMessageLifecycle(MessageState m, String stateName) {
+		DatabaseManager dbManager = DatabaseManager.getInstance();
+		if (dbManager.isEnabled()) {
+			try {
+				dbManager.updateMessageLifecycle(
+					m.getMessage_id(),
+					stateName,
+					m.getErr(),
+					1, // submit_count
+					(stateName.equals("DELIVERED")) ? 1 : 0 // delivered_count
+				);
+			} catch (Exception e) {
+				logger.error("Failed to log message lifecycle for: " + m.getMessage_id(), e);
+			}
+		}
 	}
 
 }
