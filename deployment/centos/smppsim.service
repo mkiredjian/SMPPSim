@@ -1,0 +1,42 @@
+[Unit]
+Description=SMPPSim - SMPP Protocol Simulator
+Documentation=https://github.com/smpp-sim/SMPPSim
+After=network.target mysql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# User and group to run as (create this user during deployment)
+User=smppsim
+Group=smppsim
+
+# Working directory - adjust to your installation path
+WorkingDirectory=/opt/smppsim
+
+# Java command to run SMPPSim (no arguments - uses default config from conf/ directory)
+ExecStart=/usr/bin/java -Xmx512m -Xms256m -jar /opt/smppsim/smppsim.jar
+
+# Restart policy
+Restart=on-failure
+RestartSec=10s
+
+# Resource limits
+LimitNOFILE=65536
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=smppsim
+
+# Process management
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30s
+
+[Install]
+WantedBy=multi-user.target

@@ -5,18 +5,39 @@
             <pattern>%d{yyy-mm-dd HH:mm:ss.SSS} [%thread] [%c] %-5p - %m%n</pattern>
         </layout>
     </appender>
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>/Users/hzhang/Desktop/defaultLog.log</file>
+    <!-- Rolling File Appender - Daily rotation with compression -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Current log file -->
+        <file>logs/smppsim.log</file>
         <Append>true</Append>
         <ImmediateFlush>true</ImmediateFlush>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>%date %level [%thread] [%c] %-5p - %m%n</pattern>
-        </layout>
+
+        <!-- Rolling policy: daily rotation -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Archived log file pattern: logs/smppsim-2025-10-30.log.zip -->
+            <fileNamePattern>logs/smppsim-%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+
+            <!-- Keep 30 days of history -->
+            <maxHistory>30</maxHistory>
+
+            <!-- Total size cap: 5GB -->
+            <totalSizeCap>5GB</totalSizeCap>
+
+            <!-- Clean up old files on startup -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <!-- Log pattern -->
+        <encoder>
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%c] %-5p - %m%n</pattern>
+        </encoder>
     </appender>
     <root>
-        <!--value can change to TRACE/DEBUG-->
+        <!-- Log level: INFO (can change to TRACE/DEBUG for more detail) -->
         <level value="INFO"/>
-        <!--ref can change to FILE/CONSOLE -->
+
+        <!-- Log to both FILE (with daily rotation) and CONSOLE (for systemd journal) -->
+        <appender-ref ref="FILE"/>
         <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>
