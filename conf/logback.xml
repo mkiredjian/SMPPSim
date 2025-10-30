@@ -33,8 +33,9 @@
         </encoder>
     </appender>
     <root>
-        <!-- Log level: INFO (can change to TRACE/DEBUG for more detail) -->
-        <level value="INFO"/>
+        <!-- Log level: DEBUG shows authentication details including username/password -->
+        <!-- Use DEBUG for development, INFO for production -->
+        <level value="DEBUG"/>
 
         <!-- Log to both FILE (with daily rotation) and CONSOLE (for systemd journal) -->
         <appender-ref ref="FILE"/>
